@@ -1,4 +1,5 @@
 const http = require('http');
+const https = require('https');
 
 const server = http.createServer(async (req, res) => {
   try {
@@ -19,20 +20,34 @@ const server = http.createServer(async (req, res) => {
 
 async function handleRequest(request) {
   const originalUrl = new URL(request.url, `http://${request.headers.host}`);
-  
+
   // Modify the hostname but keep the path
   const newUrl = new URL(originalUrl.pathname, 'https://play1nm.hnyongshun.cn');
 
   const headers = new Headers(request.headers);
   headers.set("Referer", "https://idv.letv8.cc/");
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 detik timeout
+
   const fetchOptions = {
     method: request.method,
     headers: headers,
-    body: request.method !== "GET" ? request.body : null
+    body: request.method !== "GET" ? request.body : null,
+    signal: controller.signal,
+    agent: new https.Agent({
+      rejectUnauthorized: false // Abaikan masalah SSL
+    })
   };
 
-  return fetch(newUrl.toString(), fetchOptions);
+  try {
+    return await fetch(newUrl.toString(), fetchOptions);
+  } catch (error) {
+    console.error("Fetch error:", error);
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }
 
 const PORT = process.env.PORT || 8080;
