@@ -1,10 +1,10 @@
 const http = require('http');
+const fetch = require('node-fetch'); // Pastikan node-fetch diinstal
 
 const server = http.createServer(async (req, res) => {
   try {
-    // Ubah hostname untuk permintaan baru
-    const url = new URL(req.url);
-    url.hostname = 'play1nm.hnyongshun.cn';
+    // Buat URL baru dengan hostname dan path dari permintaan
+    const targetUrl = new URL(req.url, 'https://play1nm.hnyongshun.cn');
 
     // Opsi untuk fetch
     const modifiedRequestOptions = {
@@ -16,7 +16,7 @@ const server = http.createServer(async (req, res) => {
     };
 
     // Lakukan permintaan ke URL yang dimodifikasi
-    const fetchResponse = await fetch(url.toString(), modifiedRequestOptions);
+    const fetchResponse = await fetch(targetUrl.toString(), modifiedRequestOptions);
     
     // Ambil status dan headers dari response
     const status = fetchResponse.status;
@@ -39,7 +39,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 // Mendengarkan pada port yang ditentukan oleh Koyeb
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
