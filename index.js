@@ -1,34 +1,45 @@
-addEventListener("fetch", event => {
-  event.respondWith(handleRequest(event.request));
-});
+const http = require('http');
 
-async function handleRequest(request) {
+const server = http.createServer(async (req, res) => {
   try {
-    // URL asli yang ingin diakses
-    let url = new URL(request.url);
-    url.hostname = "play1nm.hnyongshun.cn";
+    // Ubah hostname untuk permintaan baru
+    const url = new URL(req.url);
+    url.hostname = 'play1nm.hnyongshun.cn';
 
-    // Opsi fetch untuk menambahkan referer
-    let modifiedRequest = new Request(url.toString(), {
-      method: request.method,
+    // Opsi untuk fetch
+    const modifiedRequestOptions = {
+      method: req.method,
       headers: {
-        ...request.headers,
-        "Referer": "https://idv.letv8.cc/"
-      },
-      body: request.method !== "GET" ? request.body : null
-    });
+        ...req.headers,
+        'Referer': 'https://idv.letv8.cc/'
+      }
+    };
 
-    // Fetch ke URL yang telah dimodifikasi
-    const response = await fetch(modifiedRequest);
+    // Lakukan permintaan ke URL yang dimodifikasi
+    const fetchResponse = await fetch(url.toString(), modifiedRequestOptions);
+    
+    // Ambil status dan headers dari response
+    const status = fetchResponse.status;
+    const headers = fetchResponse.headers;
 
-    // Mengembalikan respons yang diterima dari fetch
-    return new Response(response.body, {
-      status: response.status,
-      statusText: response.statusText,
-      headers: response.headers
+    // Ambil body response
+    const responseBody = await fetchResponse.arrayBuffer();
+
+    // Kirim kembali status, headers, dan body response
+    res.writeHead(status, {
+      ...headers.raw(),
+      'Content-Type': 'application/octet-stream' // Atau tipe lain yang sesuai
     });
+    res.end(Buffer.from(responseBody));
   } catch (error) {
     console.error('Fetch error:', error);
-    return new Response("Internal Server Error", { status: 500 });
+    res.writeHead(500, { 'Content-Type': 'text/plain' });
+    res.end('Internal Server Error');
   }
-}
+});
+
+// Mendengarkan pada port yang ditentukan oleh Koyeb
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
