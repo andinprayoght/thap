@@ -1,5 +1,4 @@
 const http = require('http');
-const fetch = require('node-fetch'); // Pastikan node-fetch diinstal
 
 const server = http.createServer(async (req, res) => {
   try {
@@ -27,7 +26,7 @@ const server = http.createServer(async (req, res) => {
 
     // Kirim kembali status, headers, dan body response
     res.writeHead(status, {
-      ...headers.raw(),
+      ...Object.fromEntries(headers.entries()), // Mengubah headers menjadi objek
       'Content-Type': 'application/octet-stream' // Atau tipe lain yang sesuai
     });
     res.end(Buffer.from(responseBody));
@@ -39,7 +38,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 // Mendengarkan pada port yang ditentukan oleh Koyeb
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
