@@ -1,18 +1,21 @@
-// Importing necessary built-in modules (no need for node-fetch in v18+)
+// Importing necessary built-in modules
 const http = require('http');
 
 const server = http.createServer(async (req, res) => {
   try {
     const response = await handleRequest(req);
-    
+
+    // Read the response body (as stream or text)
+    const responseBody = await response.text(); // You can also use response.buffer() if binary
+
     // Write the headers and status code of the response
-    res.writeHead(response.status, Object.fromEntries(response.headers));
-    
-    // Pipe the response body to the client
-    response.body.pipe(res);
+    res.writeHead(response.status, Object.fromEntries(response.headers.entries()));
+
+    // Send the response body to the client
+    res.end(responseBody);
   } catch (err) {
     console.error('Error:', err);
-    
+
     // Handle errors by sending a 500 response
     res.writeHead(500, { "Content-Type": "text/plain" });
     res.end("Internal Server Error");
