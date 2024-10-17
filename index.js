@@ -27,7 +27,7 @@ const server = http.createServer(async (req, res) => {
     // Kirim kembali status, headers, dan body response
     res.writeHead(status, {
       ...Object.fromEntries(headers.entries()), // Mengubah headers menjadi objek
-      'Content-Type': 'application/octet-stream' // Atau tipe lain yang sesuai
+      'Content-Type': 'application/vnd.apple.mpegurl' // Atau tipe lain yang sesuai
     });
     res.end(Buffer.from(responseBody));
   } catch (error) {
