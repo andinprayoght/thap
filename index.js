@@ -3,14 +3,14 @@ const http = require('http');
 const server = http.createServer(async (req, res) => {
   try {
     // Buat URL baru dengan hostname dan path dari permintaan
-    const targetUrl = new URL(req.url, 'https://play1nm.hnyongshun.cn');
+    const targetUrl = new URL(req.url, 'https://obevcimanyd179569584.thapcam.link');
 
     // Opsi untuk fetch
     const modifiedRequestOptions = {
       method: req.method,
       headers: {
         ...req.headers,
-        'Referer': 'https://idv.letv8.cc/'
+        'Referer': 'https://t.fdcdn.xyz/'
       }
     };
 
