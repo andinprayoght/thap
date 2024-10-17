@@ -3,7 +3,7 @@ const http = require('http');
 const server = http.createServer(async (req, res) => {
   try {
     // Buat URL baru dengan hostname dan path dari permintaan
-    const targetUrl = new URL(req.url, 'https://live-eu-pzybaks9eeliv.thapcam.link');
+    const targetUrl = new URL(req.url, 'https://obevcimanyd179569584.thapcam.link');
 
     // Opsi untuk fetch
     const modifiedRequestOptions = {
